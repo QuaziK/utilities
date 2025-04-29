@@ -25,7 +25,7 @@ class QuotesSpider(scrapy.Spider):
     api_url = 'https://stats.bunkr.ru/api/file/stats/{}'
     
     start_urls = [
-        "https://bunkr.cr/a/XnW93PWV"
+        ""
     ]
 
     def parse(self, response):

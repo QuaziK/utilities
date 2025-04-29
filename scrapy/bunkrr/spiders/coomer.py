@@ -27,7 +27,7 @@ class CoomerSpider(scrapy.Spider):
     }
     
     start_urls = [
-        "https://kemono.su/patreon/user/107199244"
+        ""
     ]
 
     def start_requests(self):
