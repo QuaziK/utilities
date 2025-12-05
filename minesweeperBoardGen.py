@@ -31,13 +31,8 @@ class Coord:
 def getSurroundingCoords(coord):
     i = coord.i
     j = coord.j
-    allSurround = [[i-1,j-1], [i-1,j], [i-1,j+1], [i,j-1], [i,j+1], [i+1,j-1], [i+1,j], [i+1,j+1]]
-    surround = []
-    for i,j in allSurround:
-        if i < SIDE_LENGTH and i >= 0 and j < SIDE_LENGTH and j >= 0 and Coord(i*SIDE_LENGTH+j) not in mines:
-            surround.append(Coord(i=i,j=j))
             
-    return surround
+    return [[i-1,j-1], [i-1,j], [i-1,j+1], [i,j-1], [i,j+1], [i+1,j-1], [i+1,j], [i+1,j+1]]
 
 def placeMines(mines):
     board = [[0 for j in range(SIDE_LENGTH)] for i in range(SIDE_LENGTH)]
@@ -45,7 +40,10 @@ def placeMines(mines):
         i = mine.i
         j = mine.j
         board[i][j] = 'X'
-        surround = getSurroundingCoords(mine)
+        surround = []
+        for i,j in getSurroundingCoords(mine):
+            if i < SIDE_LENGTH and i >= 0 and j < SIDE_LENGTH and j >= 0 and Coord(i*SIDE_LENGTH+j) not in mines:
+                surround.append(Coord(i=i,j=j))
         for coord in surround:
             print(mine, coord.i, coord.j)
             i = coord.i
@@ -59,6 +57,11 @@ def printBoard(board):
         for j in i:
             print(str(j)+' ', end='')
         print('\n')
+
+def checkBoard(board):
+    #check if board is valid
+    
+    return None
 
 for i in range(NUM_MINES):
     select = random.choice(available)
