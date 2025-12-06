@@ -1,7 +1,7 @@
 import random
 
-SIDE_LENGTH = 3
-NUM_MINES = 2
+SIDE_LENGTH = 10
+NUM_MINES = 10
 available = list(range(SIDE_LENGTH**2))
 mines = []
 
@@ -45,7 +45,6 @@ def placeMines(mines):
             if i < SIDE_LENGTH and i >= 0 and j < SIDE_LENGTH and j >= 0 and Coord(i*SIDE_LENGTH+j) not in mines:
                 surround.append(Coord(i=i,j=j))
         for coord in surround:
-            print(mine, coord.i, coord.j)
             i = coord.i
             j = coord.j
             board[i][j] = int(board[i][j]) + 1
@@ -69,7 +68,6 @@ for i in range(NUM_MINES):
     mines = mines + [Coord(i=select)]
     # mines = [Coord(i=1,j=0)]
 
-print(mines)
 board = placeMines(mines)
 printBoard(board)
 
