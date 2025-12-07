@@ -1,7 +1,7 @@
 import random
 
-SIDE_LENGTH = 10
-NUM_MINES = 10
+SIDE_LENGTH = 3
+NUM_MINES = 2
 available = list(range(SIDE_LENGTH**2))
 mines = []
 
@@ -73,8 +73,15 @@ def printBoard(board):
 def checkBoard(board):
     #check if board is valid
     for row in board:
-        for coord in board:
-            return None
+        for coord in row:
+            surround = getSurroundingCoords(coord)
+            if coord.val == 'X':
+                if '0' in [crd.val for crd in surround]:
+                    return False 
+            else:
+                if int(coord.val) != [int(crd.val) for crd in surround].count('X'):
+                    return False 
+            return True
 
 for i in range(NUM_MINES):
     select = random.choice(available)
@@ -83,6 +90,7 @@ for i in range(NUM_MINES):
 
 board = placeMines(mines)
 printBoard(board)
+print(checkBoard(board))
 
 
 
