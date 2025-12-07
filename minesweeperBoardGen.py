@@ -6,18 +6,25 @@ available = list(range(SIDE_LENGTH**2))
 mines = []
 
 class Coord:
-    def __init__(self, i, j=None):
-        if j is not None:            
-            self.i = i
-            self.j = j
-            self.num = i*SIDE_LENGTH+j
+    def __init__(self, arg1,val='0', arg2=None):
+        if arg2 is not None:            
+            self.i = arg1
+            self.j = arg2
+            self.num = arg1*SIDE_LENGTH+arg2
+            self.val = val
         else:
-            self.i = i//SIDE_LENGTH
-            self.j = i%SIDE_LENGTH
-            self.num = i
+            self.i = arg1//SIDE_LENGTH
+            self.j = arg1%SIDE_LENGTH
+            self.num = arg1
+            self.val = val
+        
+        if val is not None:
+            self.val = val
+        else:
+            self.val = '0'
     
     def __eq__(self, other):
-        if self.i == other.i and self.j == other.j and self.num == other.num:
+        if self.i == other.i and self.j == other.j and self.num == other.num and self.val == other.val:
             return True
         else:
             return False
@@ -31,42 +38,48 @@ class Coord:
 def getSurroundingCoords(coord):
     i = coord.i
     j = coord.j
+    
+    allSurround = [[i-1,j-1], [i-1,j], [i-1,j+1], [i,j-1], [i,j+1], [i+1,j-1], [i+1,j], [i+1,j+1]]
+    returnSurround = []
+    
+    for i,j in allSurround:
+        if i < SIDE_LENGTH and i >= 0 and j < SIDE_LENGTH and j >= 0:
+            returnSurround.append(Coord(arg1=i,arg2=j))
             
-    return [[i-1,j-1], [i-1,j], [i-1,j+1], [i,j-1], [i,j+1], [i+1,j-1], [i+1,j], [i+1,j+1]]
+    return returnSurround
 
 def placeMines(mines):
-    board = [[0 for j in range(SIDE_LENGTH)] for i in range(SIDE_LENGTH)]
+    board = [[Coord(arg1=i,val='0',arg2=j) for j in range(SIDE_LENGTH)] for i in range(SIDE_LENGTH)]
     for mine in mines:
         i = mine.i
         j = mine.j
-        board[i][j] = 'X'
-        surround = []
-        for i,j in getSurroundingCoords(mine):
-            if i < SIDE_LENGTH and i >= 0 and j < SIDE_LENGTH and j >= 0 and Coord(i*SIDE_LENGTH+j) not in mines:
-                surround.append(Coord(i=i,j=j))
-        for coord in surround:
-            i = coord.i
-            j = coord.j
-            board[i][j] = int(board[i][j]) + 1
+        board[i][j].val = 'X'
+        for coord in getSurroundingCoords(mine):
+            coordMine = Coord(arg1=coord.num, val='X')
+            if coordMine not in mines:
+                i = coord.i
+                j = coord.j
+                board[i][j].val = str(int(board[i][j].val) + 1)
+
     
     return board
   
 def printBoard(board):
     for i in board:
         for j in i:
-            print(str(j)+' ', end='')
+            print(j.val+' ', end='')
         print('\n')
 
 def checkBoard(board):
     #check if board is valid
-    
-    return None
+    for row in board:
+        for coord in board:
+            return None
 
 for i in range(NUM_MINES):
     select = random.choice(available)
     available.remove(select)
-    mines = mines + [Coord(i=select)]
-    # mines = [Coord(i=1,j=0)]
+    mines = mines + [Coord(arg1=select,val='X',arg2=None)]
 
 board = placeMines(mines)
 printBoard(board)
