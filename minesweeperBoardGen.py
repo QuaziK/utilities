@@ -1,9 +1,14 @@
 import random
 
-SIDE_LENGTH = 3
-NUM_MINES = 2
+SIDE_LENGTH = 10
+NUM_MINES = 10
 available = list(range(SIDE_LENGTH**2))
 mines = []
+
+class Board:
+    def __init__(self, side_length, num_mines):
+        self.SIDE_LENGTH = side_length
+        self.NUM_MINES = num_mines
 
 class Coord:
     def __init__(self, arg1,val='0', arg2=None):
@@ -34,8 +39,11 @@ class Coord:
     
     def __repr__(self):
         return str(self)
-        
-def getSurroundingCoords(coord):
+
+#get all surrounding Coord of the passed coordinate, excluding all those that fall beyon the board limits
+#input: coord(Coord object that which yo uwant to find surrounding Coords), board(Board object in which coords are)
+#output: list of Coord        
+def getSurroundingCoords(coord,board):
     i = coord.i
     j = coord.j
     
@@ -44,17 +52,20 @@ def getSurroundingCoords(coord):
     
     for i,j in allSurround:
         if i < SIDE_LENGTH and i >= 0 and j < SIDE_LENGTH and j >= 0:
-            returnSurround.append(Coord(arg1=i,arg2=j))
+            returnSurround.append(board[i][j])
             
     return returnSurround
 
+#return a board with mines placed and correct hint numbers
+#input: mines(1d list of Coords)
+#output: board(2d list of Coords)
 def placeMines(mines):
     board = [[Coord(arg1=i,val='0',arg2=j) for j in range(SIDE_LENGTH)] for i in range(SIDE_LENGTH)]
     for mine in mines:
         i = mine.i
         j = mine.j
         board[i][j].val = 'X'
-        for coord in getSurroundingCoords(mine):
+        for coord in getSurroundingCoords(mine,board):
             coordMine = Coord(arg1=coord.num, val='X')
             if coordMine not in mines:
                 i = coord.i
@@ -63,25 +74,28 @@ def placeMines(mines):
 
     
     return board
-  
+
+#print val of all Coords in board with easy to read spacing
+#input: board(2d list of Coord)  
 def printBoard(board):
     for i in board:
         for j in i:
             print(j.val+' ', end='')
         print('\n')
 
+#check if board has correct hint numbers according to the number of mines
+#input: board(2d list of Coords)
 def checkBoard(board):
-    #check if board is valid
     for row in board:
         for coord in row:
-            surround = getSurroundingCoords(coord)
+            surround = getSurroundingCoords(coord,board)
             if coord.val == 'X':
                 if '0' in [crd.val for crd in surround]:
                     return False 
             else:
-                if int(coord.val) != [int(crd.val) for crd in surround].count('X'):
+                if int(coord.val) != [crd.val for crd in surround].count('X'):
                     return False 
-            return True
+    return True
 
 for i in range(NUM_MINES):
     select = random.choice(available)
