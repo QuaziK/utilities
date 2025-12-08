@@ -2,13 +2,15 @@ from PIL import Image, ImageFilter, ImageChops
 from skimage import io, img_as_float
 import numpy as np
 import sys
+import os
 import math
 
 # open file and convert it to greyscale
 im = Image.open(sys.argv[1]).convert('L')
 previous = im
 diff = math.inf
-STOP_THRESHOLD = 0.01
+STOP_THRESHOLD = .01
+DIR = sys.argv[1].replace(sys.argv[1].split("/")[-1],"")
 
 # from photoshop tutorial: https://www.youtube.com/watch?v=eKLki6-gynU
 # high pass 6px
@@ -43,11 +45,11 @@ while True:
     if abs(diff - getDiff(im, previous)) <= STOP_THRESHOLD:
         break    
     diff = getDiff(im,previous)
+    # save a crisper version for the gif
+    threshold(im, 128).save(DIR+f'/out_{i:03d}.png')
 
-# make it crisp for viewing
-im = threshold(im, 128)
+# turn sequence of pics into gif
+os.system(f'ffmpeg -y -hide_banner -loglevel error -f image2 -framerate 3 -i {DIR+"out_%03d.png"} {DIR+"out.gif"}')
 
-im.show()
-#TODO turn sequence of pics into gif
-print('Saving...')
-im.save(sys.argv[1].replace(sys.argv[1].split('/')[-1],'out.png'))
+# TODO Delete the pngs
+# TODO write in place the iteration number
