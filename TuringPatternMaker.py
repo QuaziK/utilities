@@ -27,12 +27,14 @@ def threshold(im, thresh):
 def getDiff(im1, im2):
     return abs(np.mean(np.array(im1) - np.array(im2)))
 
+print('Running Diffusion...')
+
 # loop diffusion until the difference is negligible
 i = 0
 while True:
     i = i + 1
     previous = im
-    print(f'Iteration {i}')
+    print(f'\rIteration {i}',end='\r',flush=True)
     
     # high pass 
     im = highPass(im, 6)
@@ -48,8 +50,11 @@ while True:
     # save a crisper version for the gif
     threshold(im, 128).save(DIR+f'/out_{i:03d}.png')
 
+print(f'Diffussion finished in {i} iterations.')
 # turn sequence of pics into gif
-os.system(f'ffmpeg -y -hide_banner -loglevel error -f image2 -framerate 3 -i {DIR+"out_%03d.png"} {DIR+"out.gif"}')
-
-# TODO Delete the pngs
-# TODO write in place the iteration number
+print('Compiling GIF')
+os.system(f'ffmpeg -y -hide_banner -loglevel error -f image2 -framerate 5 -i {DIR+"out_%03d.png"} {DIR+"out.gif"}')
+# delete the pngs
+for ii in range(1,i):
+    print(f'\rCleaning Up {ii}/{i}',end='\r',flush=True)
+    os.remove(f'{DIR}out_{ii:03d}.png')
