@@ -9,6 +9,13 @@ class Board:
     def __init__(self, side_length, num_mines):
         self.SIDE_LENGTH = side_length
         self.NUM_MINES = num_mines
+        self.board = [[Coord(arg1=i,val='0',arg2=j) for j in range(self.SIDE_LENGTH)] for i in range(self.SIDE_LENGTH)]
+        available = list(range(self.SIDE_LENGTH**2))
+        self.mines = []
+        for i in range(self.NUM_MINES):
+            select = random.choice(available)
+            available.remove(select)
+            self.mines = self.mines + [Coord(arg1=select,val='X',arg2=None)]
 
 class Coord:
     def __init__(self, arg1,val='0', arg2=None):
