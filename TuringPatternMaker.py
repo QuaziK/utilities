@@ -5,6 +5,7 @@ import os
 import math
 
 # open file and convert it to greyscale
+# TODO experiment with separating color chanels and analyzing their Turing formations
 im = Image.open(sys.argv[1]).convert('L')
 previous = im
 diff = math.inf
