@@ -1,5 +1,4 @@
 from PIL import Image, ImageFilter, ImageChops
-from skimage import io, img_as_float
 import numpy as np
 import sys
 import os
@@ -54,7 +53,7 @@ print(f'Diffussion finished in {i} iterations.')
 # turn sequence of pics into gif
 print('Compiling GIF')
 os.system(f'ffmpeg -y -hide_banner -loglevel error -f image2 -framerate 5 -i {DIR+"out_%03d.png"} {DIR+"out.gif"}')
-# delete the pngs
-for ii in range(1,i):
+# delete the pngs, all but the last one
+for ii in range(1,i-1):
     print(f'\rCleaning Up {ii}/{i}',end='\r',flush=True)
     os.remove(f'{DIR}out_{ii:03d}.png')
