@@ -1,4 +1,3 @@
-import ffmpeg
 import datetime
 import sys
 import os
@@ -51,16 +50,19 @@ def scanDir(dir, type):
         scanDir(d, type)
         
     for f in files:
-        data = cv2.VideoCapture(str(f))
-        
-        frames = data.get(cv2.CAP_PROP_FRAME_COUNT)
-        fps = data.get(cv2.CAP_PROP_FPS)
-        width  = int(data.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(data.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        try:
+            data = cv2.VideoCapture(str(f))
+            
+            frames = data.get(cv2.CAP_PROP_FRAME_COUNT)
+            fps = data.get(cv2.CAP_PROP_FPS)
+            width  = int(data.get(cv2.CAP_PROP_FRAME_WIDTH))
+            height = int(data.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-        seconds = frames/fps
+            seconds = frames/fps
 
-        deets = deets + [(seconds, width, height, str(f))]
+            deets = deets + [(seconds, width, height, str(f))]
+        except:
+            print(f"BAD FILE {f}")
     
     
     print()
@@ -82,7 +84,7 @@ def scanDir(dir, type):
         time, width, height, name = deets[i]
         timeN, widthN, heightN, nameN = deets[i+1]
          
-        if abs(timeN-time)<.01:
+        if abs(timeN-time)<.001:
             print()
             print(name.split('\\')[-1])
             print(datetime.timedelta(seconds=time))
