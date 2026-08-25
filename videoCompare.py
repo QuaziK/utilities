@@ -14,6 +14,8 @@ dir = '.'
 type = 'mp4'    
 comValid = ['help', 'exit', 'scan', 'dir', 'type']
 recursionFlag=0
+ABS_TIME = 0.001
+ABS_SIZE = 10
 
 def setDir(input):
     global dir
@@ -82,17 +84,19 @@ def scanDir(dir, type):
     print()
     for i in range(len(deets)-1):
         time, width, height, name = deets[i]
+        size = os.stat(name).st_size
         timeN, widthN, heightN, nameN = deets[i+1]
-         
-        if abs(timeN-time)<.001:
+        sizeN = os.stat(nameN).st_size
+        
+        if abs(timeN-time)<ABS_TIME and abs(size-sizeN)<ABS_SIZE:
             print()
             print(name.split('\\')[-1])
             print(datetime.timedelta(seconds=time))
-            print(str(int(os.stat(name).st_size/1024)) + 'KB')
+            print(str(int(size/1024)) + 'KB')
             print()
             print(nameN.split('\\')[-1])
             print(datetime.timedelta(seconds=timeN))
-            print(str(int(os.stat(nameN).st_size/1024)) + 'KB')
+            print(str(int(sizeN/1024)) + 'KB')
             print()
             print('---')
             print()
